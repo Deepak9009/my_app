@@ -1,17 +1,19 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, override_on_non_overriding_member, unused_local_variable
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:my_app/Payment.dart';
 import 'package:my_app/tplogin.dart';
 
 
 class PizzaApp extends StatefulWidget {
-  const PizzaApp({Key? key}) : super(key: key);
+  PizzaApp({Key? key}) : super(key: key);
 
   @override
+   FirebaseFirestore db = FirebaseFirestore.instance;
   State<PizzaApp> createState() => _PizzaAppState();
 }
 
@@ -212,9 +214,18 @@ class _PizzaAppState extends State<PizzaApp> {
                 child: Text("Change order")),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return Payment();
+                        })); 
+                  final pizzadetails = <String, dynamic>{
+                    "Topping":pizzaTopping ,
+                    "Pizza Size": pizzaSize,
+                     "Pizza Quantity":_intialValue,
+                  };
+                 FirebaseFirestore.instance.collection("Toppings").add(pizzadetails).then((DocumentReference doc) =>
+    print('DocumentSnapshot added with ID: ${doc.id}'));
                 },
-                child: Text("Pay")),
+                child: Text("Confirm Order")),
             SizedBox(
               width: 10,
             ),

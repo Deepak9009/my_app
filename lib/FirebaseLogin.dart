@@ -12,8 +12,24 @@ class FbasedLogin extends StatefulWidget {
   State<FbasedLogin> createState() => _FbasedLoginState();
 }
 
-class _FbasedLoginState extends State<FbasedLogin> {
+class _FbasedLoginState extends State<FbasedLogin>  
+ with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
   @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
+    animation = new CurvedAnimation(parent: controller, curve: Curves.easeOut);
+    animation.addListener(() => this.setState(() {}));
+    controller.forward();
+  }
+
+  
+  @override
+  
   // ignore: override_on_non_overriding_member
   final _firestore=FirebaseFirestore.instance;
     TextEditingController _password=new TextEditingController();
@@ -28,14 +44,12 @@ class _FbasedLoginState extends State<FbasedLogin> {
           child: Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: [SizedBox(height: 50),
               //---------Logo------------//
               Icon(
                 Icons.android,
-                size: 100,
+                size: animation.value * 100,
               ),
-              SizedBox(height: 50),
-
               //------Hello again------
               Text("Hello There"),
               SizedBox(height: 10),
@@ -43,9 +57,7 @@ class _FbasedLoginState extends State<FbasedLogin> {
                 "Welcome in FoodCall",
                 style: TextStyle(fontSize: 18),
               ),
-              SizedBox(
-                height: 50,
-              ),
+             SizedBox(height: 50),
               // -------------Email TextField------------//
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
@@ -135,8 +147,6 @@ class _FbasedLoginState extends State<FbasedLogin> {
                         webShowClose: false,
                         gravity: ToastGravity.BOTTOM,
                         textColor: Color.fromARGB(255, 232, 223, 223));
-                      
-
                         Navigator.push(context, MaterialPageRoute(builder: (context){
                           return LoginPage();
                         }));   
